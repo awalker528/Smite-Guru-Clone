@@ -1,4 +1,4 @@
-import * as md5 from "./md5.js;
+import * as md5 from "./md5.js";
 
 let hash = md5("Hello")
 
