@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="data.js"></script>
+        <script>
+            function runScript(){
+                const spawn = require('child_process').spawn;
+                const ls = spawn('python', ['smiteAPI.py', 'arg1', 'arg2']);
+                
+                ls.stdout.on('data', (data) => {
+                console.log(`stdout: ${data}`);
+                });
+                
+                ls.stderr.on('data', (data) => {
+                console.log(`stderr: ${data}`);
+                });
+                
+                ls.on('close', (code) => {
+                console.log(`child process exited with code ${code}`);
+                });
+            }
+        </script>
+        
+        <link href="styles.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        
+    </head>
+
+    <body>
+        
+        <div class="bodyDiv">
+            <div class="left-panel">
+                <div class="left-panel-grid">  
+                    <div class="left-panel-sub1 left-panel-all">Player Stats</div>
+                    <div class="left-panel-sub2 left-panel-all">Matches</div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Hours Played</div><div class="left-panel-data" id="hours_played"><%= locals.hoursPlayed %></div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Won</div><div class="left-panel-data" id="matches_won">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Lost</div><div class="left-panel-data" id="matches_lost">0</div></div>
+
+                    <div class="left-panel-sub2 left-panel-all">Player Kills</div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">KDA</div><div class="left-panel-data" id="player_kda">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Kills</div><div class="left-panel-data" id="player_kills">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Deaths</div><div class="left-panel-data" id="player_deaths">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Assists</div><div class="left-panel-data" id="player_assists">0</div></div>
+
+                    <div class="left-panel-sub2 left-panel-all">Farming</div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">GPM</div><div class="left-panel-data" id="player_gpm">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Gold</div><div class="left-panel-data" id="player_gold">0</div></div>
+                    
+                    <!--
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Minion Damage</div><div class="left-panel-data" id="player_minion_damage">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Minion Kills</div><div class="left-panel-data" id="player_minion_kills">0</div></div>
+
+                    <div class="left-panel-sub2 left-panel-all">Damage</div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Player</div><div class="left-panel-data" id="player_player_damage">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Team Healing</div><div class="left-panel-data" id="player_team_healing">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Self Healing</div><div class="left-panel-data" id="player_self_healing">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Inhand</div><div class="left-panel-data" id="player_damage_inhand">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Mitigated</div><div class="left-panel-data" id="player_damage_mitigated">0</div></div>
+                    <div class="left-panel-sub3 left-panel-all"><div class="left-panel-data">Taken</div><div class="left-panel-data" id="player_damage_taken">0</div></div>
+                    -->
+                </div>
+                
+                <div class="left-panel-grid ">
+                    <div class="left-panel-sub1 left-panel-all">MOST PLAYED GODS</div>
+                    <div class="left-panel-sub3 left-panel-mpg">
+                        <div class="most-played-gods-pic" id="pic1"></div>
+                        <div class="most-played-gods-left" ><div id="num_1_god">god name</div><div id="num_1_god_class">god class</div></div>
+                        <div class="most-played-gods-right"><div id="num_1_god_kda">KDA</div><div id="num_1_god_kda_exploded">kills - deaths - assists</div></div>
+                        <div class="most-played-gods-right" ><div id="num_1_god_wl">Win Loss</div><div id="num_1_god_wl_exploded">wins - losses</div></div>
+                    </div>
+                    <div class="left-panel-sub2 left-panel-mpg">
+                        <div class="most-played-gods-pic" id="pic2"></div>
+                        <div class="most-played-gods-left" ><div id="num_2_god">god name</div><div id="num_2_god_class">god class</div></div>
+                        <div class="most-played-gods-right"><div id="num_2_god_kda">KDA</div><div id="num_2_god_kda_exploded">kills - deaths - assists</div></div>
+                        <div class="most-played-gods-right" ><div id="num_2_god_wl">Win Loss</div><div id="num_2_god_wl_exploded">wins - losses</div></div>
+                    </div>
+                    <div class="left-panel-sub3 left-panel-mpg">
+                        <div class="most-played-gods-pic" id="pic3"></div>
+                        <div class="most-played-gods-left" ><div id="num_3_god">god name</div><div id="num_3_god_class">god class</div></div>
+                        <div class="most-played-gods-right"><div id="num_3_god_kda">KDA</div><div id="num_3_god_kda_exploded">kills - deaths - assists</div></div>
+                        <div class="most-played-gods-right" ><div id="num_3_god_wl">Win Loss</div><div id="num_3_god_wl_exploded">wins - losses</div></div>
+                    </div>
+                    <div class="left-panel-sub2 left-panel-mpg">
+                        <div class="most-played-gods-pic" id="pic4"></div>
+                        <div class="most-played-gods-left" ><div id="num_4_god">god name</div><div id="num_4_god_class">god class</div></div>
+                        <div class="most-played-gods-right"><div id="num_4_god_kda">KDA</div><div id="num_4_god_kda_exploded">kills - deaths - assists</div></div>
+                        <div class="most-played-gods-right" ><div id="num_4_god_wl">Win Loss</div><div id="num_4_god_wl_exploded">wins - losses</div></div>
+                    </div>
+                    <div class="left-panel-sub3 left-panel-mpg">
+                        <div class="most-played-gods-pic" id="pic5"></div>
+                        <div class="most-played-gods-left" ><div id="num_5_god">god name</div><div id="num_5_god_class">god class</div></div>
+                        <div class="most-played-gods-right"><div id="num_5_god_kda">KDA</div><div id="num_5_god_kda_exploded">kills - deaths - assists</div></div>
+                        <div class="most-played-gods-right" ><div id="num_5_god_wl">Win Loss</div><div id="num_5_god_wl_exploded">wins - losses</div></div>
+                    </div>
+                    
+                </div>
+
+                
+                
+                  
+                
+            </div>
+            <div class="right-panel">
+                <section>
+                    <h1 id="demo">STATS BY CLASS<select>
+                            <option>Lifetime Total</option>
+                            <option>Game Averages</option>
+                        </select>
+                    </h1>
+                    
+                </section>
+                
+                <section class ="char-Type" style="border-top: solid rgb(110, 70, 184) 5px">
+                    <div class="char-header">Conquest</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="conq-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="conq-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div> 
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(233, 182, 44) 5px">
+                    <div class="char-header">Joust</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="joust-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="joust-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div> 
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(23, 148, 44) 5px">
+                    <div class="char-header">Assault</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="assault-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="assault-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div>  
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(23, 148, 44) 5px">
+                    <div class="char-header">Arena</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="arena-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="arena-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div>  
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(23, 148, 44) 5px">
+                    <div class="char-header">Siege</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="siege-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="siege-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div>  
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(28, 69, 180) 5px">
+                    <div class="char-header">Ranked Conquest</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="rank-conq-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-conq-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div> 
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(170, 37, 37) 5px">
+                    <div class="char-header">Ranked Joust</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="rank-joust-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-joust-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div>  
+                </section>
+                <section class ="char-Type" style="border-top: solid rgb(233, 182, 44) 5px">
+                    <div class="char-header">Ranked Duel</div>
+                    <div class="char-grid">
+                        
+                        <div class="char-grid-children">
+                            <div id="rank-duel-playtime">2hr 48m</div>
+                            <div>PLAYTIME</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-gold">GOLD</div>
+                            <div>GOLD</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-gpm">GPM</div>
+                            <div>GPM</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-kda">KDA</div>
+                            <div>KDA</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-kills">KILLS</div>
+                            <div>KILLS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-deaths">DEATHS</div>
+                            <div>DEATHS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-assists">ASSISTS</div>
+                            <div>ASSISTS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-wins">WINS</div>
+                            <div>WINS</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-losses">LOSSES</div>
+                            <div>LOSSES</div>
+                        </div>
+                        <div class="char-grid-children">
+                            <div id="rank-duel-wl">WIN/LOSS RATIO</div>
+                            <div>WIN/LOSS RATIO</div>
+                        </div>
+                    </div> 
+                </section>
+
+            </div> 
+
+        </div>
+        
+    </body>
+</html>
